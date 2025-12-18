@@ -66,17 +66,16 @@ npm install
 
 ### 2️⃣ Environment Variables
 Create a .env file:
-env
-Copy code
-PORT=3000
-DATABASE_URL=postgres://user:password@localhost:5432/task_queue
-EMAIL_USER=your_email@gmail.com
-EMAIL_PASS=your_app_password
+- env
+-- PORT=3000
+-- DATABASE_URL=postgres://user:password@localhost:5432/task_queue
+-- EMAIL_USER=your_email@gmail.com
+-- EMAIL_PASS=your_app_password
 
 
 ### 3️⃣ Start the Server
-Copy code
 npm run dev
+
 Server will start on:
 
 http://localhost:3000
@@ -86,7 +85,7 @@ Worker starts automatically.
 
 Add a Job
 
-curl -X POST http://localhost:3000/jobs \
+-- curl -X POST http://localhost:3000/jobs \
   -H "Content-Type: application/json" \
   -d '{
         "email": "test@example.com",
@@ -97,15 +96,16 @@ curl -X POST http://localhost:3000/jobs \
 
 ### Check Queue Stats
 
-curl http://localhost:3000/stats
-⏱️ Time & Space Complexity
-Job enqueue: O(1)
+-- curl http://localhost:3000/stats
 
-Job polling: O(1)
+### ⏱️ Time & Space Complexity
+-- Job enqueue: O(1)
 
-Worker execution: Depends on job logic
+-- Job polling: O(1)
 
-Database operations: Indexed lookups
+- Worker execution: Depends on job logic
+
+- Database operations: Indexed lookups
 
 ## 📌 Why PostgreSQL Instead of Redis?
 ACID guarantees
