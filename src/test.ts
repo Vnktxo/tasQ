@@ -5,9 +5,9 @@ async function sendJob() {
             method: 'POST',
             headers: { 'content-type': 'application/json' },
             body: JSON.stringify({
-                email: "neymarjr5031@gmail.com",
-                subject: "TasQ Test mail",
-                body: "This is a test mail sent via my TasQ system!",
+                email: "prabhasaravanan78@gmail.com",
+                subject: "KOrra",
+                body: "Look at Korra!",
                 delay: 2
             })
         });

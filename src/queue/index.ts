@@ -6,7 +6,7 @@ export interface Job {
     payload: any;
     status: 'pending' | 'processing' | 'completed' | 'failed';
     run_at: Date;
-    attempts: number;      // <--- Added these so TypeScript doesn't complain
+    attempts: number;      
     max_attempts: number;
 }
 
@@ -22,10 +22,10 @@ export class PostgresQueue {
         const sql = `
             INSERT INTO jobs (name, payload, run_at)
             VALUES (
-                $1, 
-                $2, 
+                $1,
+                $2,
                 NOW() + make_interval(secs => $3)
-            ) 
+            )
             RETURNING id;
         `;
 
@@ -51,7 +51,7 @@ export class PostgresQueue {
                 LIMIT 1
             )
             RETURNING *;`;
-            
+
         const res = await query(sql, [this.queueName]);
         return res.rows[0] || null;
     }
@@ -60,15 +60,15 @@ export class PostgresQueue {
     async handleFailure(job: Job, err: Error) {
         const sql = `
             UPDATE jobs
-            SET 
-                status = CASE 
-                    WHEN attempts < max_attempts THEN 'pending' 
-                    ELSE 'failed' 
+            SET
+                status = CASE
+                    WHEN attempts < max_attempts THEN 'pending'
+                    ELSE 'failed'
                 END,
                 -- Exponential Backoff: Wait 2^attempts seconds
-                run_at = CASE 
+                run_at = CASE
                     WHEN attempts < max_attempts THEN NOW() + (power(2, attempts) * INTERVAL '1 second')
-                    ELSE run_at 
+                    ELSE run_at
                 END,
                 last_error = $1,
                 updated_at = NOW()
@@ -101,7 +101,7 @@ export class PostgresQueue {
               AND updated_at < NOW() - make_interval(mins => $1)
             RETURNING id;
         `;
-        
+
         const res = await query(sql, [minutes]);
         if (res.rowCount && res.rowCount > 0) {
             console.log(`[🚑 Recovery] Reset ${res.rowCount} zombie jobs to pending.`);
@@ -111,12 +111,12 @@ export class PostgresQueue {
     // 6. DASHBOARD STATS
     async getStats() {
         const sql = `
-            SELECT status, COUNT(*) as count 
-            FROM jobs 
+            SELECT status, COUNT(*) as count
+            FROM jobs
             GROUP BY status;
         `;
         const res = await query(sql);
-        
+
         const stats: any = { pending: 0, processing: 0, completed: 0, failed: 0 };
         res.rows.forEach(row => {
             stats[row.status] = parseInt(row.count);

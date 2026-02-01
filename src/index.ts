@@ -1,10 +1,12 @@
 import express from 'express';
+import cors from 'cors'
 import { PostgresQueue } from './queue';
 import { pool } from './db';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 
 const app = express();
+app.use(cors())
 app.use(express.json());
 
 const emailQueue = new PostgresQueue('email_queue');
@@ -61,7 +63,7 @@ const startWorker = async () => {
 
             isWorking = true;
             console.log(`[Worker] Processing job ${job.id} (Attempt ${job.attempts})...`);
-            
+
             // Simulate work (so you can see the delay)
             await new Promise(r => setTimeout(r, 2000));
 
