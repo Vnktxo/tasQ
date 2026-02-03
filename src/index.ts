@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors'
 import { PostgresQueue } from './queue';
 import { pool } from './db';
+import { query } from './db';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 
@@ -39,6 +40,33 @@ app.get('/stats', async (req, res) => {
             timestamp: new Date(),
             stats: stats
         });
+    } catch (err: any) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.get('/stats', async (req, res) => {
+    try {
+        const stats = await emailQueue.getStats();
+        res.json({
+            queue: 'email_queue',
+            timestamp: new Date(),
+            stats: stats
+        });
+    } catch (err: any) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.get('/emails', async (req, res) => {
+    try {
+        const sql = `
+            SELECT * FROM extracted_emails
+            ORDER BY received_at DESC
+            LIMIT 50
+        `;
+        const result = await pool.query(sql); // Using the exported 'pool'
+        res.json(result.rows);
     } catch (err: any) {
         res.status(500).json({ error: err.message });
     }

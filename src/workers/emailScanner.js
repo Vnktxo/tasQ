@@ -1,15 +1,15 @@
 const { ImapFlow } = require('imapflow');
-//require('dotenv').config();
+require('dotenv').config();
 
 const client = new ImapFlow({
     host: 'imap.gmail.com',
     port: 993,
     secure: true,
     auth: {
-        user: 'vnktesh14@gmail.com',
-        pass: 'ghjy qvan ijcg cday'
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
     },
-    logger: false // Set to true if you want to see the raw matrix code
+    logger: true // Set to true if you want to see the raw matrix code
 });
 
 async function main() {
