@@ -13,4 +13,16 @@ CREATE TABLE IF NOT EXISTS jobs(
     last_error TEXT
 );
 
-CREATE INDEX IF NOT EXISTS idx_jobs ON jobs (name, status, run_at)
+CREATE INDEX IF NOT EXISTS idx_jobs ON jobs (name, status, run_at);
+
+-- NEW TABLE FOR EMAILS
+CREATE TABLE IF NOT EXISTS extracted_emails (
+    id SERIAL PRIMARY KEY,
+    remote_id INT UNIQUE,
+    sender VARCHAR(255),
+    subject TEXT,
+    snippet TEXT,
+    received_at TIMESTAMP,
+    keyword_matched VARCHAR(50),
+    created_at TIMESTAMP DEFAULT NOW()
+);
